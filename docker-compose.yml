@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  servidor:
+    container_name: mi-server
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/mydatabase
+      - PORT=4000
+      - DATABASE_HOST=base_de_datos
+      - DATABASE_USER=root 
+      - DATABASE_PASSWORD=docker
+      - DATABASE_NAME=Segundo_parcial
+    depends_on:
+      - mongodb
+      - base_de_datos
+    volumes:
+      - ./app-mongo:/app-mongo
+
+  mongodb:
+    container_name: mi-db
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+  
+  base_de_datos:
+    image: mysql:8.0.33
+    container_name: my-sql
+
+    environment:
+       MYSQL_ROOT_PASSWORD: docker
+       MYSQL_DATABASE: Segundo_parcial
+    
+    ports:
+      - 3306:3306
+
+    volumes:
+      - ./db-mysql:/var/lib/mysql
